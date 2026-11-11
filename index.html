@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Cumpleaños</title>
+
+  <!-- Favicon inline: evita el 404 de /favicon.ico -->
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="src/dos.png" />
+
+  <!-- Animate.css v4 (CDN). Tailwind ya NO va por CDN: lo procesa Vite desde src/style.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&family=Pinyon+Script&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body class="locked antialiased">
+
+  <!-- Fondo de partículas -->
+  <div id="particles" aria-hidden="true"></div>
+
+  <!-- ======================= INTRO ======================= -->
+  <section id="intro" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center">
+    <p
+      class="animate__animated animate__fadeInDown font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-rose-600/80 mb-6">
+      Hoy es un día especial
+    </p>
+    <h1
+      class="animate__animated animate__fadeIn animate__delay-1s font-script text-6xl sm:text-8xl text-rose-600 leading-tight">
+      Para ti, mi amor
+    </h1>
+    <div class="divider my-8 animate__animated animate__fadeIn animate__delay-1s"></div>
+    <p
+      class="animate__animated animate__fadeInUp animate__delay-2s font-serif italic text-xl sm:text-2xl text-rose-600/90 max-w-md leading-relaxed">
+      Hay momentos que merecen ser guardados para siempre,<br class="hidden sm:block" />
+      y este es uno de ellos.
+    </p>
+
+    <button id="openBtn"
+      class="btn-heart animate__animated animate__fadeInUp animate__delay-3s mt-12 inline-flex items-center gap-3 px-9 py-4 rounded-full text-white font-sans text-sm tracking-[.25em] uppercase bg-linear-to-r from-rose-500 via-rose-400 to-rose-500 shadow-xl shadow-rose-400/40">
+      <span class="heartbeat text-lg">♥</span>
+      Abrir tu sorpresa
+    </button>
+  </section>
+
+  <!-- ======================= CONTENIDO PRINCIPAL ======================= -->
+  <main id="main">
+
+    <!-- Hero -->
+    <header class="min-h-screen flex flex-col items-center justify-center text-center px-6 py-20">
+      <p class="reveal font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-gold-500 mb-8"
+        data-anim="animate__fadeInDown">
+        2 de noviembre
+      </p>
+      <h2 class="reveal font-script text-7xl sm:text-9xl text-rose-600 leading-none" data-anim="animate__zoomIn"
+        style="animation-duration:1.6s">
+        Feliz Cumpleaños
+      </h2>
+      <div class="divider my-8"></div>
+      <p class="reveal font-serif text-3xl sm:text-5xl text-rose-600/90 font-light tracking-wide"
+        data-anim="animate__fadeInUp">
+        <span class="nombre">Mi Amor</span>
+      </p>
+      <a href="#carta"
+        class="reveal btn-soft mt-14 inline-flex items-center gap-2 px-7 py-3 rounded-full border border-rose-300 text-rose-600 text-xs tracking-[.3em] uppercase bg-white/50 backdrop-blur-sm"
+        data-anim="animate__fadeIn">
+        Tengo algo para ti ↓
+      </a>
+    </header>
+
+    <!-- Carta -->
+    <section id="carta" class="min-h-screen flex flex-col items-center justify-center px-5 py-24">
+      <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600 mb-3 text-center"
+        data-anim="animate__fadeInUp">Una carta para ti</h3>
+      <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400 mb-14 text-center"
+        data-anim="animate__fadeInUp">Toca el sobre para abrirlo</p>
+
+      <!-- Sobre -->
+      <div id="envelopeWrap" class="envelope-wrap reveal" data-anim="animate__fadeInUp">
+        <div id="envelope" class="envelope" role="button" tabindex="0" aria-label="Abrir la carta">
+          <div class="env-letter-peek"></div>
+          <div class="env-flap"></div>
+          <div class="env-front"></div>
+          <div class="env-seal">♥</div>
+        </div>
+      </div>
+
+      <!-- Carta abierta -->
+      <article id="letter" class="letter hidden w-full max-w-2xl rounded-md px-7 sm:px-14 py-12 sm:py-16 text-center">
+        <p class="font-script text-5xl sm:text-6xl text-rose-600 mb-8">Mi querida <span class="nombre">amor</span>,</p>
+
+        <div class="font-serif text-lg sm:text-[1.35rem] leading-[1.9] text-[#6b3346] font-light space-y-5">
+          <p>
+            Hoy el mundo celebra el día en que llegaste a él, y yo no puedo evitar sentirme
+            la persona más afortunada por haber coincidido contigo en esta vida.
+          </p>
+          <p>
+            Contigo aprendí que el amor no hace ruido: se esconde en las pequeñas cosas,
+            en tu risa que lo ilumina todo, en tu mirada que me calma y en la manera
+            en que convertís cualquier día común en un recuerdo que quiero guardar.
+          </p>
+          <p>
+            Gracias por tu paciencia, por tu ternura y por ser mi lugar favorito.
+            Deseo que este nuevo año de tu vida te regale todo lo hermoso que mereces,
+            y que me dejes ser testigo y compañero de cada uno de tus sueños.
+          </p>
+          <p class="italic text-rose-600">
+            Feliz cumpleaños, mi vida. Te amo hoy, mañana y siempre.
+          </p>
+        </div>
+
+        <div class="divider my-9"></div>
+        <p class="font-script text-4xl text-rose-500">Con todo mi amor ♥</p>
+        <p class="mt-2 font-serif italic text-rose-400 text-lg">— Antony</p>
+      </article>
+    </section>
+
+    <!-- Galería -->
+    <section id="galeria" class="px-5 py-24">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600" data-anim="animate__fadeInUp">Nuestros
+            momentos</h3>
+          <div class="divider my-5"></div>
+          <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400" data-anim="animate__fadeInUp">Cada foto,
+            una historia</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 sm:gap-10 lg:gap-14 px-4 sm:px-8">
+
+          <figure class="polaroid reveal" style="--r:-4deg" data-anim="animate__fadeInUp">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/9HQ0RWz0/7929533447-100238769612809-1781840805596.png" alt="Nuestra foto 1" />
+            <figcaption>Nuestro comienzo</figcaption>
+          </figure>
+
+          <figure class="polaroid reveal" style="--r:3deg" data-anim="animate__fadeInUp" data-delay=".15s">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/ch7Y53Z6/7929533447-83617641283348-1781764619892.png" alt="Nuestra foto 2" />
+            <figcaption>Tu sonrisa</figcaption>
+          </figure>
+
+          <figure class="polaroid reveal" style="--r:-2deg" data-anim="animate__fadeInUp" data-delay=".3s">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/hJSPM5Ft/7929533447-83617641283348-1781765368839.png" alt="Nuestra foto 3" />
+            <figcaption>Juntos siempre</figcaption>
+          </figure>
+
+          <figure class="polaroid reveal" style="--r:4deg" data-anim="animate__fadeInUp">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/Xxs2bqTc/7929533447-83617641283348-1783143412472.png" alt="Nuestra foto 4" />
+            <figcaption>Aventuras</figcaption>
+          </figure>
+
+          <figure class="polaroid reveal" style="--r:-3deg" data-anim="animate__fadeInUp" data-delay=".15s">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/gL21MYJm/7929533447-100238769612809-1781839930817.png" alt="Nuestra foto 5" />
+            <figcaption>Mi lugar favorito</figcaption>
+          </figure>
+
+          <figure class="polaroid reveal" style="--r:2deg" data-anim="animate__fadeInUp" data-delay=".3s">
+            <span class="tape"></span>
+            <img src="https://i.ibb.co/FZmqy06/7929533447-139092898447441-1781845453873.png" alt="Nuestra foto 6" />
+            <figcaption>Para siempre</figcaption>
+          </figure>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Cierre -->
+    <footer class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 py-24">
+      <div class="reveal text-5xl heartbeat text-rose-500 mb-8" data-anim="animate__zoomIn">♥</div>
+      <p class="reveal font-script text-5xl sm:text-7xl text-rose-600 leading-tight" data-anim="animate__fadeInUp">Te
+        amo</p>
+      <p class="reveal mt-6 font-serif italic text-xl text-rose-500/90 max-w-md" data-anim="animate__fadeInUp">
+        Gracias por existir y por dejarme amarte.
+      </p>
+      <button id="burstBtn"
+        class="btn-soft mt-12 px-8 py-3 rounded-full bg-linear-to-r from-rose-500 to-rose-400 text-white text-xs tracking-[.3em] uppercase shadow-lg shadow-rose-300/50">
+        Un último detalle ✦
+      </button>
+    </footer>
+  </main>
+
+  <!-- Botón flotante música -->
+  <button id="musicBtn"
+    class="fixed bottom-5 right-5 z-[60] w-12 h-12 rounded-full bg-white/70 border border-rose-200 text-rose-500 shadow-lg flex items-center justify-center opacity-0 pointer-events-none"
+    aria-label="Pausar o reanudar la música">
+    <span class="pulse-ring absolute inset-0 rounded-full border border-rose-300"></span>
+    <span id="musicIcon" class="relative text-lg">♪</span>
+  </button>
+
+  <!-- Audio oculto: el src se asigna desde main.js con el mp3 de src/audio -->
+  <audio id="bgAudio" loop preload="auto" class="hidden"></audio>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

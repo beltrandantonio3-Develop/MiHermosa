@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Feliz Cumpleaños</title>
 
-  <!-- Favicon inline: evita el 404 de /favicon.ico -->
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="src/dos.png" />
+  <!-- Favicon inline (evita el error 404 de favicon.ico) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❤️</text></svg>" />
 
-  <!-- Animate.css v4 (CDN). Tailwind ya NO va por CDN: lo procesa Vite desde src/style.css -->
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Animate.css v4 (CDN) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <!-- Tipografías -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,32 +19,215 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&family=Pinyon+Script&display=swap"
     rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+            script: ['"Pinyon Script"', 'cursive'],
+          },
+          colors: {
+            rose: { 50: '#fff5f7', 100: '#ffe4ea', 200: '#fbc6d3', 300: '#f4a0b5', 400: '#e87894', 500: '#d4567a', 600: '#b53a60' },
+            gold: { 300: '#e8cf9a', 400: '#d9b872', 500: '#c49a45' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(160deg, #fff5f7 0%, #fde4ec 40%, #f6d5e3 70%, #efd0e6 100%);
+      background-attachment: fixed;
+      color: #5a2a3c;
+      min-height: 100vh;
+    }
+    body.locked { overflow: hidden; }
+
+    /* ---------- Partículas de fondo ---------- */
+    #particles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+    .particle { position: absolute; top: -40px; will-change: transform, opacity; animation-timing-function: linear; animation-fill-mode: forwards; }
+    .p-heart { color: #e87894; text-shadow: 0 0 8px rgba(232,120,148,.35); }
+    .p-petal {
+      background: linear-gradient(135deg, #f8b4c6, #e0647f);
+      border-radius: 150% 0 150% 0;
+      box-shadow: inset -2px -2px 4px rgba(150,30,70,.25);
+    }
+    .p-sparkle { color: #d9b872; text-shadow: 0 0 10px rgba(217,184,114,.9); }
+
+    @keyframes fall {
+      0%   { transform: translate3d(0,-5vh,0) rotate(0deg); opacity: 0; }
+      10%  { opacity: var(--op, .85); }
+      50%  { transform: translate3d(var(--sway, 40px), 55vh, 0) rotate(calc(var(--rot, 180deg) / 2)); }
+      100% { transform: translate3d(calc(var(--sway, 40px) * -1), 110vh, 0) rotate(var(--rot, 360deg)); opacity: 0; }
+    }
+    @keyframes floatUp {
+      0%   { transform: translate3d(0,0,0) scale(.4); opacity: 0; }
+      20%  { opacity: 1; }
+      100% { transform: translate3d(var(--sway, 30px), -30vh, 0) scale(1.1); opacity: 0; }
+    }
+    @keyframes twinkle {
+      0%, 100% { transform: scale(.5) rotate(0deg); opacity: .2; }
+      50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+    }
+
+    /* ---------- Lluvia de corazones (al abrir la carta) ---------- */
+    #heartRain { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 55; }
+    .rain-heart {
+      position: absolute; top: -60px; line-height: 1;
+      will-change: transform, opacity;
+      animation-timing-function: linear; animation-fill-mode: forwards;
+      filter: drop-shadow(0 2px 4px rgba(150,30,70,.25));
+    }
+
+    /* ---------- Intro ---------- */
+    #intro {
+      transition: opacity 1.2s ease, visibility 1.2s ease;
+      background: radial-gradient(ellipse at 50% 30%, #fff0f4 0%, #fbd3df 55%, #f1b9cf 100%);
+    }
+    #intro.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .btn-heart { transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, background-position .6s ease; background-size: 200% 100%; }
+    .btn-heart:hover { transform: scale(1.07); box-shadow: 0 14px 40px -8px rgba(212,86,122,.65); background-position: 100% 0; }
+    .btn-heart:active { transform: scale(.97); }
+    .heartbeat { animation: heartbeat 1.6s ease-in-out infinite; display: inline-block; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.3); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.2); }
+    }
+
+    /* ---------- Contenido principal ---------- */
+    #main { opacity: 0; transition: opacity 1.4s ease .3s; position: relative; z-index: 10; }
+    #main.show { opacity: 1; }
+    .reveal { opacity: 0; }
+    .divider { height: 1px; width: 90px; background: linear-gradient(90deg, transparent, #c49a45, transparent); margin: 0 auto; }
+
+    /* ---------- Sobre ---------- */
+    .envelope-wrap { perspective: 1200px; }
+    .envelope {
+      position: relative; width: min(88vw, 400px); height: min(58vw, 262px);
+      background: linear-gradient(145deg, #f7c2d0, #eeaabf);
+      border-radius: 6px;
+      box-shadow: 0 25px 50px -15px rgba(150,40,80,.45);
+      cursor: pointer;
+      transition: transform .4s ease, box-shadow .4s ease;
+    }
+    .envelope:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 35px 60px -15px rgba(150,40,80,.5); }
+    .env-flap {
+      position: absolute; top: 0; left: 0; width: 100%; height: 55%;
+      background: linear-gradient(160deg, #f4b3c6, #e996ae);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform .8s ease, z-index 0s .4s;
+      z-index: 3;
+      border-radius: 6px 6px 0 0;
+    }
+    .env-front {
+      position: absolute; inset: 0; z-index: 2;
+      background:
+        linear-gradient(to top right, transparent 49.6%, rgba(255,255,255,.25) 50%, transparent 50.6%) left / 50% 100% no-repeat,
+        linear-gradient(to top left, transparent 49.6%, rgba(255,255,255,.25) 50%, transparent 50.6%) right / 50% 100% no-repeat;
+      border-radius: 6px;
+    }
+    .env-seal {
+      position: absolute; top: 46%; left: 50%; transform: translate(-50%, -50%);
+      width: 52px; height: 52px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #e0526f, #a82a4d);
+      box-shadow: 0 4px 10px rgba(0,0,0,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: #ffe4ea; font-size: 22px; z-index: 4;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+    .envelope.open .env-flap { transform: rotateX(180deg); z-index: 0; }
+    .envelope.open .env-seal { opacity: 0; transform: translate(-50%, -50%) scale(.3); }
+    .env-letter-peek {
+      position: absolute; left: 6%; right: 6%; top: 8%; height: 80%;
+      background: #fffaf5; border-radius: 4px; z-index: 1;
+      transition: transform .9s ease .3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    }
+    .envelope.open .env-letter-peek { transform: translateY(-55%); }
+
+    /* ---------- Carta ---------- */
+    .letter {
+      background:
+        linear-gradient(rgba(255,250,245,.97), rgba(255,250,245,.97)),
+        repeating-linear-gradient(transparent, transparent 31px, #f0dcd2 32px);
+      border: 1px solid rgba(196,154,69,.35);
+      box-shadow: 0 30px 60px -20px rgba(150,40,80,.35), inset 0 0 60px rgba(244,200,180,.25);
+    }
+
+    /* ---------- Polaroids ---------- */
+    .polaroid {
+      background: #fff;
+      padding: 12px 12px 48px;
+      box-shadow: 0 12px 30px -8px rgba(90,42,60,.35);
+      transform: rotate(var(--r, 0deg));
+      transition: transform .5s cubic-bezier(.34,1.56,.64,1), box-shadow .4s ease, z-index 0s;
+      position: relative;
+    }
+    .polaroid:hover { transform: rotate(0deg) scale(1.08) translateY(-6px); box-shadow: 0 25px 45px -10px rgba(90,42,60,.45); z-index: 5; }
+    .polaroid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: linear-gradient(135deg, #f8d3de, #e9b9cc); filter: saturate(.95); }
+    .polaroid figcaption {
+      position: absolute; bottom: 10px; left: 0; right: 0; text-align: center;
+      font-family: 'Pinyon Script', cursive; font-size: 1.5rem; color: #8a3b57;
+    }
+    .tape {
+      position: absolute; top: -14px; left: 50%; width: 80px; height: 26px;
+      transform: translateX(-50%) rotate(-3deg);
+      background: rgba(244,200,160,.55);
+      backdrop-filter: blur(1px);
+    }
+
+    /* ---------- Botón de música ---------- */
+    #musicBtn { transition: transform .3s ease, background .3s ease, opacity .6s ease; backdrop-filter: blur(8px); }
+    #musicBtn:hover { transform: scale(1.12); }
+    #musicBtn.playing .pulse-ring { animation: ring 2s ease-out infinite; }
+    @keyframes ring { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.7); opacity: 0; } }
+
+    .btn-soft { transition: transform .3s cubic-bezier(.34,1.56,.64,1), background .3s ease, box-shadow .3s ease; }
+    .btn-soft:hover { transform: scale(1.06); box-shadow: 0 10px 25px -8px rgba(212,86,122,.55); }
+    .btn-soft:active { transform: scale(.97); }
+
+    /* Solo se ocultan las partículas de fondo; la lluvia de corazones siempre se ve */
+    @media (prefers-reduced-motion: reduce) {
+      .particle { display: none; }
+      .heartbeat { animation: none; }
+    }
+  </style>
 </head>
 
 <body class="locked antialiased">
 
   <!-- Fondo de partículas -->
   <div id="particles" aria-hidden="true"></div>
+  <!-- Lluvia de corazones al abrir la carta -->
+  <div id="heartRain" aria-hidden="true"></div>
 
   <!-- ======================= INTRO ======================= -->
   <section id="intro" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center">
-    <p
-      class="animate__animated animate__fadeInDown font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-rose-600/80 mb-6">
+    <p class="animate__animated animate__fadeInDown font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-rose-600/80 mb-6">
       Hoy es un día especial
     </p>
-    <h1
-      class="animate__animated animate__fadeIn animate__delay-1s font-script text-6xl sm:text-8xl text-rose-600 leading-tight">
+    <h1 class="animate__animated animate__fadeIn animate__delay-1s font-script text-6xl sm:text-8xl text-rose-600 leading-tight">
       Para ti, mi amor
     </h1>
     <div class="divider my-8 animate__animated animate__fadeIn animate__delay-1s"></div>
-    <p
-      class="animate__animated animate__fadeInUp animate__delay-2s font-serif italic text-xl sm:text-2xl text-rose-600/90 max-w-md leading-relaxed">
+    <p class="animate__animated animate__fadeInUp animate__delay-2s font-serif italic text-xl sm:text-2xl text-rose-600/90 max-w-md leading-relaxed">
       Hay momentos que merecen ser guardados para siempre,<br class="hidden sm:block" />
       y este es uno de ellos.
     </p>
 
     <button id="openBtn"
-      class="btn-heart animate__animated animate__fadeInUp animate__delay-3s mt-12 inline-flex items-center gap-3 px-9 py-4 rounded-full text-white font-sans text-sm tracking-[.25em] uppercase bg-linear-to-r from-rose-500 via-rose-400 to-rose-500 shadow-xl shadow-rose-400/40">
+      class="btn-heart animate__animated animate__fadeInUp animate__delay-3s mt-12 inline-flex items-center gap-3 px-9 py-4 rounded-full text-white font-sans text-sm tracking-[.25em] uppercase bg-gradient-to-r from-rose-500 via-rose-400 to-rose-500 shadow-xl shadow-rose-400/40">
       <span class="heartbeat text-lg">♥</span>
       Abrir tu sorpresa
     </button>
@@ -54,32 +238,25 @@
 
     <!-- Hero -->
     <header class="min-h-screen flex flex-col items-center justify-center text-center px-6 py-20">
-      <p class="reveal font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-gold-500 mb-8"
-        data-anim="animate__fadeInDown">
+      <p class="reveal font-sans text-[11px] sm:text-xs tracking-[.5em] uppercase text-gold-500 mb-8" data-anim="animate__fadeInDown">
         2 de noviembre
       </p>
-      <h2 class="reveal font-script text-7xl sm:text-9xl text-rose-600 leading-none" data-anim="animate__zoomIn"
-        style="animation-duration:1.6s">
+      <h2 class="reveal font-script text-7xl sm:text-9xl text-rose-600 leading-none" data-anim="animate__zoomIn" style="animation-duration:1.6s">
         Feliz Cumpleaños
       </h2>
       <div class="divider my-8"></div>
-      <p class="reveal font-serif text-3xl sm:text-5xl text-rose-600/90 font-light tracking-wide"
-        data-anim="animate__fadeInUp">
+      <p class="reveal font-serif text-3xl sm:text-5xl text-rose-600/90 font-light tracking-wide" data-anim="animate__fadeInUp">
         <span class="nombre">Mi Amor</span>
       </p>
-      <a href="#carta"
-        class="reveal btn-soft mt-14 inline-flex items-center gap-2 px-7 py-3 rounded-full border border-rose-300 text-rose-600 text-xs tracking-[.3em] uppercase bg-white/50 backdrop-blur-sm"
-        data-anim="animate__fadeIn">
+      <a href="#carta" class="reveal btn-soft mt-14 inline-flex items-center gap-2 px-7 py-3 rounded-full border border-rose-300 text-rose-600 text-xs tracking-[.3em] uppercase bg-white/50 backdrop-blur" data-anim="animate__fadeIn">
         Tengo algo para ti ↓
       </a>
     </header>
 
     <!-- Carta -->
     <section id="carta" class="min-h-screen flex flex-col items-center justify-center px-5 py-24">
-      <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600 mb-3 text-center"
-        data-anim="animate__fadeInUp">Una carta para ti</h3>
-      <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400 mb-14 text-center"
-        data-anim="animate__fadeInUp">Toca el sobre para abrirlo</p>
+      <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600 mb-3 text-center" data-anim="animate__fadeInUp">Una carta para ti</h3>
+      <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400 mb-14 text-center" data-anim="animate__fadeInUp">Toca el sobre para abrirlo</p>
 
       <!-- Sobre -->
       <div id="envelopeWrap" class="envelope-wrap reveal" data-anim="animate__fadeInUp">
@@ -117,7 +294,7 @@
 
         <div class="divider my-9"></div>
         <p class="font-script text-4xl text-rose-500">Con todo mi amor ♥</p>
-        <p class="mt-2 font-serif italic text-rose-400 text-lg">— Antony</p>
+        <p class="mt-2 font-serif italic text-rose-400 text-lg">— Tu nombre</p>
       </article>
     </section>
 
@@ -125,11 +302,9 @@
     <section id="galeria" class="px-5 py-24">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-16">
-          <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600" data-anim="animate__fadeInUp">Nuestros
-            momentos</h3>
+          <h3 class="reveal font-serif italic text-3xl sm:text-4xl text-rose-600" data-anim="animate__fadeInUp">Nuestros momentos</h3>
           <div class="divider my-5"></div>
-          <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400" data-anim="animate__fadeInUp">Cada foto,
-            una historia</p>
+          <p class="reveal text-xs tracking-[.35em] uppercase text-rose-400" data-anim="animate__fadeInUp">Cada foto, una historia</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 sm:gap-10 lg:gap-14 px-4 sm:px-8">
@@ -177,15 +352,10 @@
     <!-- Cierre -->
     <footer class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 py-24">
       <div class="reveal text-5xl heartbeat text-rose-500 mb-8" data-anim="animate__zoomIn">♥</div>
-      <p class="reveal font-script text-5xl sm:text-7xl text-rose-600 leading-tight" data-anim="animate__fadeInUp">Te
-        amo</p>
+      <p class="reveal font-script text-5xl sm:text-7xl text-rose-600 leading-tight" data-anim="animate__fadeInUp">Te amo</p>
       <p class="reveal mt-6 font-serif italic text-xl text-rose-500/90 max-w-md" data-anim="animate__fadeInUp">
         Gracias por existir y por dejarme amarte.
       </p>
-      <button id="burstBtn"
-        class="btn-soft mt-12 px-8 py-3 rounded-full bg-linear-to-r from-rose-500 to-rose-400 text-white text-xs tracking-[.3em] uppercase shadow-lg shadow-rose-300/50">
-        Un último detalle ✦
-      </button>
     </footer>
   </main>
 
@@ -197,10 +367,200 @@
     <span id="musicIcon" class="relative text-lg">♪</span>
   </button>
 
-  <!-- Audio oculto: el src se asigna desde main.js con el mp3 de src/audio -->
-  <audio id="bgAudio" loop preload="auto" class="hidden"></audio>
+  <!--
+    AUDIO: coloca tu mp3 en una carpeta "audio" junto a este index.html:
+      audio/prodjoseph-guitar-acoustic-328453.mp3
+    Si no lo encuentra, usa la segunda fuente (enlace en línea) como respaldo.
+  -->
+  <audio id="bgAudio" loop preload="auto" class="hidden">
+    <source src="./src/audio/prodjoseph-guitar-acoustic-328453.mp3" type="audio/mpeg" />
+  </audio>
 
-  <script type="module" src="/src/main.js"></script>
+  <script>
+    // ================== CONFIGURACIÓN ==================
+    const NOMBRE = "Mi Andy Hermosa";
+    // ===================================================
+
+    document.querySelectorAll('.nombre').forEach(el => el.textContent = NOMBRE);
+
+    const intro = document.getElementById('intro');
+    const main = document.getElementById('main');
+    const openBtn = document.getElementById('openBtn');
+    const audio = document.getElementById('bgAudio');
+    const musicBtn = document.getElementById('musicBtn');
+    const musicIcon = document.getElementById('musicIcon');
+    const layer = document.getElementById('particles');
+    const rainLayer = document.getElementById('heartRain');
+    audio.volume = 0.5;
+
+    const rand = (a, b) => Math.random() * (b - a) + a;
+
+    /* ---------- Partículas de fondo ---------- */
+    function spawnParticle() {
+      const el = document.createElement('div');
+      const t = Math.random();
+      el.className = 'particle';
+      el.style.left = rand(0, 100) + 'vw';
+      el.style.setProperty('--sway', rand(20, 90) * (Math.random() > .5 ? 1 : -1) + 'px');
+      el.style.setProperty('--rot', rand(180, 720) * (Math.random() > .5 ? 1 : -1) + 'deg');
+      let dur;
+
+      if (t < 0.35) { // corazón
+        el.classList.add('p-heart');
+        el.textContent = '♥';
+        el.style.fontSize = rand(12, 26) + 'px';
+        el.style.setProperty('--op', rand(.5, .9));
+        dur = rand(9, 15);
+        el.style.animation = `fall ${dur}s linear forwards`;
+      } else if (t < 0.75) { // pétalo
+        el.classList.add('p-petal');
+        const s = rand(9, 18);
+        el.style.width = s + 'px';
+        el.style.height = s * 1.2 + 'px';
+        el.style.setProperty('--op', rand(.6, .95));
+        dur = rand(10, 17);
+        el.style.animation = `fall ${dur}s linear forwards`;
+      } else { // destello
+        el.classList.add('p-sparkle');
+        el.textContent = '✦';
+        el.style.top = rand(10, 95) + 'vh';
+        el.style.fontSize = rand(8, 18) + 'px';
+        dur = rand(3, 6);
+        el.style.animation = `twinkle ${dur}s ease-in-out forwards`;
+      }
+
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000 + 200);
+    }
+
+    setInterval(spawnParticle, 420);
+    for (let i = 0; i < 10; i++) setTimeout(spawnParticle, i * 150);
+
+    function burst(x, y, n = 28) {
+      for (let i = 0; i < n; i++) {
+        const el = document.createElement('div');
+        el.className = 'particle ' + (Math.random() > .5 ? 'p-heart' : 'p-sparkle');
+        el.textContent = el.classList.contains('p-heart') ? '♥' : '✦';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.fontSize = rand(12, 28) + 'px';
+        el.style.setProperty('--sway', rand(-160, 160) + 'px');
+        const dur = rand(1.6, 3);
+        el.style.animation = `floatUp ${dur}s ease-out forwards`;
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), dur * 1000 + 100);
+      }
+    }
+
+    /* ---------- LLUVIA DE CORAZONES (al abrir la carta) ---------- */
+    // Solo rojos y rosados (sin morado ni negro)
+    const HEARTS = ['❤️', '💖', '💗', '💓', '💕', '💞', '💘', '💝', '🩷', '❣️'];
+
+    function heartRain(total = 140, spread = 7000) {
+      for (let i = 0; i < total; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'rain-heart';
+          el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+          el.style.left = rand(0, 100) + 'vw';
+          el.style.fontSize = rand(20, 44) + 'px';
+          el.style.setProperty('--sway', rand(-70, 70) + 'px');
+          el.style.setProperty('--rot', rand(-70, 70) + 'deg');
+          el.style.setProperty('--op', 1);
+          const dur = rand(4, 8);
+          el.style.animation = `fall ${dur}s linear forwards`;
+          rainLayer.appendChild(el);
+          setTimeout(() => el.remove(), dur * 1000 + 100);
+        }, rand(0, spread));
+      }
+    }
+
+    /* ---------- Música ---------- */
+    let playing = false;
+    function setMusicUI() {
+      musicIcon.textContent = playing ? '♪' : '✕';
+      musicBtn.classList.toggle('playing', playing);
+      musicBtn.style.opacity = playing ? '1' : '.7';
+    }
+    async function playMusic() {
+      try { await audio.play(); playing = true; }
+      catch (e) { playing = false; console.warn('Audio no reproducido:', e); }
+      setMusicUI();
+    }
+    musicBtn.addEventListener('click', async () => {
+      if (audio.paused) { await playMusic(); }
+      else { audio.pause(); playing = false; setMusicUI(); }
+    });
+
+    /* ---------- Abrir la sorpresa ---------- */
+    openBtn.addEventListener('click', (e) => {
+      playMusic(); // justo con el clic → sin bloqueos del navegador
+      burst(e.clientX, e.clientY, 30);
+
+      intro.classList.add('fade-out');
+      document.body.classList.remove('locked');
+      main.classList.add('show');
+      musicBtn.classList.remove('opacity-0', 'pointer-events-none');
+      musicBtn.style.opacity = '1';
+
+      setTimeout(() => { intro.style.display = 'none'; initReveal(); }, 1300);
+      window.scrollTo(0, 0);
+    });
+
+    /* ---------- Animaciones al hacer scroll ---------- */
+    function initReveal() {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          const anim = el.dataset.anim || 'animate__fadeInUp';
+          if (el.dataset.delay) el.style.animationDelay = el.dataset.delay;
+          el.classList.add('animate__animated', anim);
+          el.style.opacity = 1;
+          io.unobserve(el);
+        });
+      }, { threshold: 0.2 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    }
+
+    /* ---------- Sobre / Carta ---------- */
+    const envelope = document.getElementById('envelope');
+    const envWrap = document.getElementById('envelopeWrap');
+    const letter = document.getElementById('letter');
+    let opened = false;
+
+    function openEnvelope() {
+      if (opened) return;
+      opened = true;
+      envelope.classList.add('open');
+      heartRain(); // 💖 ¡lluvia de corazones justo al abrir la carta!
+
+      const r = envelope.getBoundingClientRect();
+      burst(r.left + r.width / 2, r.top + r.height / 2, 22);
+
+      setTimeout(() => {
+        envWrap.classList.add('animate__animated', 'animate__fadeOutDown');
+        envWrap.style.animationDuration = '.7s';
+      }, 1500);
+
+      setTimeout(() => {
+        envWrap.style.display = 'none';
+        letter.classList.remove('hidden');
+        letter.classList.add('animate__animated', 'animate__fadeInUp');
+        letter.style.animationDuration = '1.2s';
+        letter.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 2150);
+    }
+    envelope.addEventListener('click', openEnvelope);
+    envelope.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openEnvelope(); }
+    });
+
+    /* ---------- Si una foto falla, mostrar fondo suave ---------- */
+    document.querySelectorAll('.polaroid img').forEach(img => {
+      img.addEventListener('error', () => { img.removeAttribute('src'); });
+    });
+  </script>
 </body>
 
 </html>
